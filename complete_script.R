@@ -22,4 +22,36 @@ merged_df <- merge(clean_gdp, edu, by.x = "country_code", by.y = "CountryCode")
 length(merged_df$country_code)
 ### 224 country codes matched and merged
 
-head(merged_df[merged_df$Income.Group == "High Income: OECD"])
+
+sorted <- merged_df[order(merged_df$gdp_mmUSD),]
+sorted$gdp_mmUSD_F <- as.numeric(gsub("[^[:digit:]]","", sorted$gdp_mmUSD))
+
+
+sorted$rank[(sorted$rank == "")] <- 0
+sorted$rank <- as.numeric(sorted$rank)
+aggregate(sorted$rank, list(sorted$Income.Group), mean, na.rm=TRUE, na.action=NULL)
+
+library(ggplot2)
+
+
+
+sorted$Income.Group[is.na(sorted$Income.Group)] <- "NA Group"
+
+log_cut <- ggplot(sorted, aes(x=log(gdp_mmUSD_F), fill=Income.Group))
+log_cut +  geom_density(alpha = 0.2) + xlim(0, 20)
+
+norm_cut <- ggplot(sorted, aes(x=(gdp_mmUSD_F), fill=Income.Group))
+norm_cut +  geom_density(alpha = 0.2) # defaults to stacking
+
+
+
+
+quantile_df <- sorted[order(sorted$gdp_mmUSD_F),][1:203,]
+
+items <- length(quantile_df$gdp_mmUSD_F)
+bucket_size <- items/5
+
+quintile_ranks <- c(41,81,121,161,202)
+  stop = (x * bucket_size)
+  quantile_df$bucket[start:stop,] <- x
+}

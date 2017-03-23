@@ -1,0 +1,101 @@
+ ---
+title: "Case_Study"
+author: "Peter Kouvaris"
+date: "3/22/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Tools Review
+
+This report was completed using R. Libraries and version information are included below:
+```{r}
+R.Version()
+suppressMessages(library(digest)) #for SHA1 
+suppressMessages(library(ggplot2)) #for visualizations
+```
+\pagebreak
+
+##Data Import & Cleaning
+
+The data used in the study was pulled from the World Bank's open online databases. Original sources can be found here:  
+          [GDP Ranking Data](http://data.worldbank.org/data-catalog/GDP-ranking-table)  
+          [EDU Stats Data](http://data.worldbank.org/data-catalog/ed-stats) 
+The data is made up of two tables, both comprised of economic variables on a per country basis. 
+
+```{r}
+gdp_global <- read.csv("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv")
+# e38fd47ab0775ed957b7eefb3a6884aa2f23730a
+edu <- read.csv("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv")
+# 64e11f8dc2a256854ef0144765541c9a8f108a37
+```
+
+If the data is not still accessible at the time of review, csv versions of the sets have been saved in the data directory of this project.
+
+The gdp_global variable is not formatted correctly. To fix this, (1) subset it into a new memory object, (2) remove empty space at the top of the dataframe pulled when importing, (3) subset the appropriate rows and columns, and finally (4) rename the columns for easy reference.
+
+```{r}
+#             (1)                 (2)     (3a)          (3b)
+clean_gdp <- subset(gdp_global[5:length(gdp_global$X),c(1,2,4,5)])
+#                   (4)
+colnames(clean_gdp)  <- c("country_code","rank","country","gdp_mmUSD")
+```
+
+## 1 Merge
+
+Merging on the marching CountryCode fields and then checking the length of the merged dataframe to see how many coutry codes matched.
+```{r}
+merged_df <- merge(clean_gdp, edu, by.x = "country_code", by.y = "CountryCode")
+length(merged_df$country_code)
+### 224 country codes matched and merged
+```
+
+224 of the country codes in the global GDP set matched those in the Edu set. 
+
+## 2 Sort
+
+Sorting the data shows that the formatting for GDP in USD is not numeric. Cleaning the commas and converting to the proper data type must be completed first. Then, selecing the 13th row after the ascending sort has been applied.
+
+```{r}
+merged_df$gdp_mmUSD_F <- as.numeric(gsub("[^[:digit:]]","", merged_df$gdp_mmUSD))
+sorted <- merged_df[order(merged_df$gdp_mmUSD_F),]
+sorted[13,]
+```
+
+The 13th country as shown in the output is St. Kitts and Nevis, with a GDP in Millions of USD of 767.
+
+## 3 Average GDP Rankings
+
+The rank variable must first be coerced as type numeric so that mean operations can be performed. Because some values are empty strings "", they must first be turned to NA so that when converting to type numeric they do not turn into integers worth 1 and skew the average calculation. Then, grouping by Income Group and ignoring NA values, the average can be calculated for the Income Groups. 
+
+```{r}
+sorted$rank[(sorted$rank == "")] <- 0
+sorted$rank <- as.numeric(sorted$rank)
+aggregate(sorted$rank, list(sorted$Income.Group), mean, na.rm=TRUE, na.action=NULL)
+```
+
+The average GDP ranking for High income: nonOECD is 93.73913 and 110.06667 High income: OECD, where a higher ranking 
+
+## 4 Color Ploats By Income Group
+
+GDP being a monetary value means that the data is right-skewed to the point where many distribution visualizations are weak. To adjust the visualization so that the income groups can be compared, the amount in USD millions was log transformed.
+
+```{r}
+log_cut <- ggplot(sorted, aes(x=log(gdp_mmUSD_F), fill=Income.Group))
+log_cut +  geom_density(alpha = 0.2) + xlim(0, 20)
+```
+
+When transformed and plotted we can see that there are varying distribution shapes among income groups, notably that the densities of "Low income" and "High income: OECD | nonOECD" nations are large, where middle income nations have wider intervals of possible values.
+
+## 5 Summary Statistics Per Income Group
+
+```{r}
+groups <- c("High income: nonOECD", "High income: OECD", "Low income", "Lower middle income", "Upper middle income")
+for (x in groups) {
+  print(x)
+  print(summary(sorted$gdp_mmUSD_F[sorted$Income.Group == x]))
+}
+```
