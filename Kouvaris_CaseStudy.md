@@ -4,7 +4,7 @@
 </colgroup>
 <tbody>
 <tr class="odd">
-<td>itle: &quot;Case_Study&quot; uthor: &quot;Peter Kouvaris&quot; ate: &quot;3/22/2017&quot; utput:</td>
+<td>Kouvaris, Peter - Case Study 01</td>
 </tr>
 </tbody>
 </table>
