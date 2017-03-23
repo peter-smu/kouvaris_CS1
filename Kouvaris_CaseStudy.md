@@ -69,8 +69,9 @@ The data used in the study was pulled from the World Bank's open online
 databases. Original sources can be found here:  
 [GDP Ranking
 Data](http://data.worldbank.org/data-catalog/GDP-ranking-table)  
-[EDU Stats Data](http://data.worldbank.org/data-catalog/ed-stats) The
-data is made up of two tables, both comprised of economic variables on a
+[EDU Stats Data](http://data.worldbank.org/data-catalog/ed-stats) 
+
+The data is made up of two tables, both comprised of economic variables on a
 per country basis.
 
     gdp_global <- read.csv("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv")
@@ -78,7 +79,7 @@ per country basis.
     edu <- read.csv("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv")
     # 64e11f8dc2a256854ef0144765541c9a8f108a37
 
-If the data is not still accessible at the time of review, csv versions
+If the data is not accessible at the time of review, csv files
 of the sets have been saved in the data directory of this project.
 
 The gdp\_global variable is not formatted correctly. To fix this, (1)
@@ -94,7 +95,7 @@ columns, and finally (4) rename the columns for easy reference.
 1 Merge
 -------
 
-Merging on the marching CountryCode fields and then checking the length
+Merging on the matching CountryCode fields and then checking the length
 of the merged dataframe to see how many coutry codes matched.
 
     merged_df <- merge(clean_gdp, edu, by.x = "country_code", by.y = "CountryCode")
@@ -178,12 +179,12 @@ be calculated for the Income Groups.
     ## 6  Upper middle income 106.13333
 
 The average GDP ranking for High income: nonOECD is 93.73913 and
-110.06667 High income: OECD, where a higher ranking
+110.06667 High income: OECD.
 
 4 Color Ploats By Income Group
 ------------------------------
 
-GDP being a monetary value means that the data is right-skewed to the
+GDP is heavily right-skewed to the
 point where many distribution visualizations are weak. To adjust the
 visualization so that the income groups can be compared, the amount in
 USD millions was log transformed.
@@ -247,13 +248,13 @@ gives us the final quantile.
     largest_38 <- quantile_df[(end-38):end,]
     large_lwi <- largest_38[largest_38$Income.Group == "Lower middle income", ]
 
-There are 6 countries the meet this criteria .Nigeria, Egypt, China,
+There are 6 countries the meet this criteria. Nigeria, Egypt, China,
 India, Indonesia, and Thailand.
 
 Conclusion
 ----------
 
-When reviewing all the items individually analyzed above, increased
+When reviewing all the items as a whole, increased
 understanding between then shape of GDP in MM USD versus Income Group
 can be gained. High or low income groups have a much higher density,
 meaning that a more narrow range can be placed on the GDP of countries
@@ -262,7 +263,7 @@ with incomes on either the lower or higher end. The middle portions,
 ranges. For countries classified in this way, there can be a large
 range. One may consider the reason for this to be the economies of scale
 available at some point when an econonmy is slightly larger than Low
-income economies. There most likely exists a economic point where the
+income economies. There most likely exists an economic point where the
 production of a country increases rapidly that is out of range from the
 narrowly distributed "Low income" nations, but achievable by middle
 income ones. We can assume this point exists somewhere around the
