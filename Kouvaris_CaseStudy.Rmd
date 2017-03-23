@@ -25,7 +25,7 @@ suppressMessages(library(digest)) #for SHA1
 suppressMessages(library(ggplot2)) #for visualizations
 ```
 
-##Introduction, Import & Cleaning
+## Introduction, Import & Cleaning
 
 The data used in the study was pulled from the World Bank's open online databases. Original sources can be found here:  
           [GDP Ranking Data](http://data.worldbank.org/data-catalog/GDP-ranking-table)  
