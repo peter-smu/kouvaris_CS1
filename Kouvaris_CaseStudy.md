@@ -62,7 +62,7 @@ included below:
     suppressMessages(library(digest)) #for SHA1 
     suppressMessages(library(ggplot2)) #for visualizations
 
-Data Import & Cleaning
+Introduction, Import & Cleaning
 ----------------------
 
 The data used in the study was pulled from the World Bank's open online
