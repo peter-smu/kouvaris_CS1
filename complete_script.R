@@ -45,13 +45,10 @@ norm_cut +  geom_density(alpha = 0.2) # defaults to stacking
 
 
 
+quantile_df <- quantile_df[!is.na(quantile_df$rank),]
+quantile_df <- quantiled_df[order(quantiled_df$gdp_mmUSD_F)]
+end <- length(quantile_df$rank)
+largest_38 <- quantile_df[(end-38):end,]
+large_lwi <- largest_38[largest_38$Income.Group == "Lower middle income", ]
 
-quantile_df <- sorted[order(sorted$gdp_mmUSD_F),][1:203,]
 
-items <- length(quantile_df$gdp_mmUSD_F)
-bucket_size <- items/5
-
-quintile_ranks <- c(41,81,121,161,202)
-  stop = (x * bucket_size)
-  quantile_df$bucket[start:stop,] <- x
-}

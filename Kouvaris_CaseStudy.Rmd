@@ -1,8 +1,15 @@
+---
+output:
+  md_document: default
+  html_document: default
+  pdf_document: default
+---
  ---
 title: "Case_Study"
 author: "Peter Kouvaris"
 date: "3/22/2017"
-output: html_document
+output:
+  
 ---
 
 ```{r setup, include=FALSE}
@@ -92,6 +99,8 @@ When transformed and plotted we can see that there are varying distribution shap
 
 ## 5 Summary Statistics Per Income Group
 
+Now that we have reviewed the shape of different income groups, lets review the summary statistics on the non-transformed data to get an understanding of differences in values:
+
 ```{r}
 groups <- c("High income: nonOECD", "High income: OECD", "Low income", "Lower middle income", "Upper middle income")
 for (x in groups) {
@@ -99,3 +108,23 @@ for (x in groups) {
   print(summary(sorted$gdp_mmUSD_F[sorted$Income.Group == x]))
 }
 ```
+
+The differences noted in the distribution plot can also be seen here.
+
+## 6 Quantile Testing
+
+To understand how many "Lower middle income" economies are in the largest 38 countries when ranking based on GDP in Millions of USD, first remove all meta-data points that do not belong to countries, but instead to larger classifications. Dropping items where rank is equal to NA achieves this. Then sorting the result and selecting the last 38th, gives us the final quantile. 
+
+```{r}
+quantile_df <- sorted[!is.na(sorted$rank),]
+quantile_df <- quantile_df[order(quantile_df$gdp_mmUSD_F),]
+end <- length(quantile_df$rank)
+largest_38 <- quantile_df[(end-38):end,]
+large_lwi <- largest_38[largest_38$Income.Group == "Lower middle income", ]
+```
+
+There are 6 countries the meet this criteria .Nigeria, Egypt, China, India, Indonesia, and Thailand. 
+
+## Conclusion
+
+When reviewing all the items individually analyzed above, increased understanding between then shape of GDP in MM USD versus Income Group can be gained. High or low income groups have a much higher density, meaning that a more narrow range can be placed on the GDP of countries with incomes on either the lower or higher end. The middle portions, "Upper middle income" and "Lower middle income", span across wider ranges. For countries classified in this way, there can be a large range. One may consider the reason for this to be the economies of scale available at some point when an econonmy is slightly larger than Low income economies. There most likely exists a economic point where the production of a country increases rapidly that is out of range from the narrowly distributed "Low income" nations, but achievable by middle income ones. We can assume this point exists somewhere around the positive standard deviations of middle income rated countries, seeing as they have a tendancy to have wider distributions that span to the right into the area of higher income economies.

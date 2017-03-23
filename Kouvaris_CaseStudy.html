@@ -131,7 +131,13 @@ $(document).ready(function () {
 <td>ate: “3/22/2017”</td>
 </tr>
 <tr class="even">
-<td>utput: html_document</td>
+<td>utput:</td>
+</tr>
+<tr class="odd">
+<td>md_document:</td>
+</tr>
+<tr class="even">
+<td>variant: markdown_github</td>
 </tr>
 </tbody>
 </table>
@@ -273,6 +279,7 @@ log_cut +  geom_density(alpha = 0.2) + xlim(0, 20)</code></pre>
 </div>
 <div id="summary-statistics-per-income-group" class="section level2">
 <h2>5 Summary Statistics Per Income Group</h2>
+<p>Now that we have reviewed the shape of different income groups, lets review the summary statistics on the non-transformed data to get an understanding of differences in values:</p>
 <pre class="r"><code>groups &lt;- c(&quot;High income: nonOECD&quot;, &quot;High income: OECD&quot;, &quot;Low income&quot;, &quot;Lower middle income&quot;, &quot;Upper middle income&quot;)
 for (x in groups) {
   print(x)
@@ -293,6 +300,15 @@ for (x in groups) {
 ## [1] &quot;Upper middle income&quot;
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
 ##     228    9613   42940  231800  205800 2253000       2</code></pre>
+<p>The differences noted in the distribution plot can also be seen here.</p>
+</div>
+<div id="quantile-testing" class="section level2">
+<h2>6 Quantile Testing</h2>
+<pre class="r"><code>quantile_df &lt;- sorted[order(sorted$gdp_mmUSD_F),]</code></pre>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>There is a clear</p>
 </div>
 
 
